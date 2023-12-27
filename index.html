@@ -54,7 +54,7 @@
     <!-- Your JS script -->
     <script>
 
-        var map;
+        var map, layercontrol;
 
         function loadMap() {
             // Get selected dates from datepicker
@@ -113,10 +113,18 @@
             basemaps.SatelliteImagery.addTo(map);
 
             // Add layer control to the map
-            var layerControl = L.control.layers(basemaps).addTo(map);
+            layercontrol = L.control.layers(basemaps).addTo(map);
 
             // Add zoom control to the top right corner
             L.control.zoom({ position: 'topright' }).addTo(map);
+            
+            var usaBounds = [
+               [24.396308, -125.000000], // Southwest
+  [49.345786, -66.934570]   // Northeast
+];
+
+// Fit the map to the bounding box
+map.fitBounds(usaBounds);
         }
 
         function add_swe_predicted_geotiff(){
@@ -147,6 +155,7 @@
                  transparent: true
            });
            wmslayer.addTo(map);
+           layercontrol.addOverlay(wmslayer, "Predicted SWE 2023-10-03");
            
         }
 
