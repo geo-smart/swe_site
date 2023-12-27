@@ -168,6 +168,48 @@ map.fitBounds(usaBounds);
         });
 
         function refresh_calendar(){
+	      // Fetch the CSV file
+	      fetch('../swe_forecasting/date_list.csv')
+	        .then(response => response.text())
+	        .then(data => {
+	          // Parse CSV data
+	          const datesArray = data.split('\n').map(row => row.trim());
+
+
+                  console.log("datesArray = " + datesArray)
+	          // Get the date input element
+	          const dateInput = document.getElementById('datepicker');
+
+	          // Disable dates that are not in the CSV file
+	          /*dateInput.addEventListener('input', function () {
+	            const selectedDate = dateInput.value;
+                    
+	            if (!datesArray.includes(selectedDate)) {
+	              alert('This date is not allowed. Please choose another date.');
+	              dateInput.value = ''; // Clear the input if an invalid date is selected
+	            }
+	          }); */
+                  
+
+                      // Disable dates that are not in the CSV file
+          dateInput.addEventListener('input', function () {
+            const selectedDate = dateInput.value;
+
+            if (!allowedDates.includes(selectedDate)) {
+              // Disable the date by setting a max and min attribute to the selected date
+              dateInput.setAttribute('max', selectedDate);
+              dateInput.setAttribute('min', selectedDate);
+            } else {
+              // Enable the date input
+              dateInput.removeAttribute('max');
+              dateInput.removeAttribute('min');
+            }
+          });
+
+	        })
+	        .catch(error => console.error('Error fetching CSV file:', error));
+
+                
             
         }
         refresh_calendar()
