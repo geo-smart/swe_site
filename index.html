@@ -28,12 +28,12 @@
             z-index: 1000; /* Ensure it's above the map */
         }
 
-        #map-controls {
+        /*#map-controls {
             position: absolute;
             top: 10px;
             right: 10px;
-            z-index: 1001; /* Ensure it's above other controls */
-        }
+            z-index: 1001;
+        }*/
 
         h1, label, input, button {
             margin-bottom: 10px;
@@ -119,9 +119,10 @@
             L.control.zoom({ position: 'topright' }).addTo(map);
             
             var usaBounds = [
-               [24.396308, -125.000000], // Southwest
-  [49.345786, -66.934570]   // Northeast
-];
+               // -125, 25, -100, 49
+               [25, -125.000000], // Southwest
+               [49, -100]   // Northeast
+           ];
 
 // Fit the map to the bounding box
 map.fitBounds(usaBounds);
@@ -149,13 +150,14 @@ map.fitBounds(usaBounds);
                 console.error('Error fetching GeoTIFF bounds:', error);
               });**/
 
-           var wmslayer = L.tileLayer.wms('http://geobrain.csiss.gmu.edu/cgi-bin/mapserv?map=/var/www/html/swe_forecasting/map/swe.map&', {
+           var wmslayer = L.tileLayer.wms('http://geobrain.csiss.gmu.edu/cgi-bin/mapserv?'+
+                 'map=/var/www/html/swe_forecasting/map/swe_predicted_2023-12-10.tif.map&', {
                  layers: 'swemap',
                  format: 'image/png',
                  transparent: true
            });
            wmslayer.addTo(map);
-           layercontrol.addOverlay(wmslayer, "Predicted SWE 2023-10-03");
+           layercontrol.addOverlay(wmslayer, "Predicted SWE 2023-12-10");
            
         }
 
@@ -164,6 +166,18 @@ map.fitBounds(usaBounds);
             loadMap();
             add_swe_predicted_geotiff();
         });
+
+        function refresh_calendar(){
+            
+        }
+        refresh_calendar()
+
+        function add_listener_to_buttons(){
+            
+        }
+        add_listener_to_buttons()
+
+
     </script>
 </body>
 </html>
