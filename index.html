@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWE Forecast Map</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Your CSS styles -->
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+        }
+
+        #content {
+            position: absolute;
+            top: 20px; /* Adjust the top position as needed */
+            left: 20px; /* Adjust the left position as needed */
+            z-index: 1000; /* Ensure it's above the map */
+        }
+
+        #map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1001; /* Ensure it's above other controls */
+        }
+
+        h1, label, input, button {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>Snow Water Equivalent Estimation Map - SnowSource Team</h1>
+        <label for="datepicker">Select Dates:</label>
+        <input type="date" id="datepicker" multiple>
+        <button onclick="loadMap()">Load SWE Prediciton</button>
+    </div>
+    <div id="map"></div>
+    <!--<div id="map-controls"></div>-->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Your JS script -->
+    <script>
+
+        var map;
+
+        function loadMap() {
+            // Get selected dates from datepicker
+            var selectedDates = document.getElementById('datepicker').value.split(',');
+            
+            // Get the Leaflet map container
+            map = L.map('map').setView([0, 0], 2);
+
+            var basemaps = {
+                
+                Topography: L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
+                    layers: 'TOPO-WMS'
+                }),
+
+                Places: L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
+        layers: 'OSM-Overlay-WMS'
+    }),
+
+    'Topography, then places': L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
+        layers: 'TOPO-WMS,OSM-Overlay-WMS'
+    }),
+
+    'Places, then topography': L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
+        layers: 'OSM-Overlay-WMS,TOPO-WMS'
+    }),
+ 
+                'SatelliteImagery': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/'+
+                    '/tile/{z}/{y}/{x}', {
+                    attribution: 'Esri',
+                    maxZoom: 19
+                }),
+            };
+
+            // Add Esri WorldImagery as the base layer (satellite hybrid)
+            /*var basemap_satellite_layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/'+
+'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Esri',
+                maxZoom: 19
+            }).addTo(map);*/
+
+            // Load GeoTIFFs onto the Leaflet map
+            /*selectedDates.forEach(function (selectedDate) {
+                var geoTIFFUrl = '/get_geotiff?date=' + selectedDate;
+                
+                fetch(geoTIFFUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        var bounds = data.bounds; // Assuming your endpoint provides bounds
+                        L.imageOverlay(geoTIFFUrl, bounds).addTo(map);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching GeoTIFF:', error);
+                    });
+            });*/
+
+            basemaps.SatelliteImagery.addTo(map);
+
+            // Add layer control to the map
+            var layerControl = L.control.layers(basemaps).addTo(map);
+
+            // Add zoom control to the top right corner
+            L.control.zoom({ position: 'topright' }).addTo(map);
+        }
+
+        function add_swe_predicted_geotiff(){
+
+            // URL to your GeoTIFF file
+            // var geoTIFFUrl = '../swe_forecasting/plots/swe_predicted_2023-10-03.tif';
+
+            // console.log("geoTIFFUrl = " + geoTIFFUrl)
+            // Fetch GeoTIFF bounds
+            // fetch(geoTIFFUrl)
+            /**  .then(response => response.json())
+              .then(data => {
+                var bounds = data.bounds; // Assuming your endpoint provides bounds
+
+                // Display GeoTIFF on the map
+                L.imageOverlay(geoTIFFUrl, bounds).addTo(map);
+
+                // Fit the map to the GeoTIFF bounds
+                map.fitBounds(bounds);
+              })
+              .catch(error => {
+                console.error('Error fetching GeoTIFF bounds:', error);
+              });**/
+
+           var wmslayer = L.tileLayer.wms('http://geobrain.csiss.gmu.edu/cgi-bin/mapserv?map=/var/www/html/swe_forecasting/map/swe.map&', {
+                 layers: 'swemap',
+                 format: 'image/png',
+                 transparent: true
+           });
+           wmslayer.addTo(map);
+           
+        }
+
+        // Automatically load the map when the document is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMap();
+            add_swe_predicted_geotiff();
+        });
+    </script>
+</body>
+</html>
+
