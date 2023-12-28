@@ -83,11 +83,6 @@ function setup_datepicker(dateArray){
                 ('0' + (date.getMonth() + 1)).slice(-2) + '-' + 
                 ('0' + date.getDate()).slice(-2);
 
-            console.log("received dateArray = " + dateArray)
-            if(dateArray.includes(formattedDate)){
-                console.log("the datearray contains formattedDate = " + formattedDate)
-            }
-
             // Check if the date is in the dateArray
             return dateArray.includes(formattedDate);
         }
@@ -102,12 +97,14 @@ function findLatestDate(dates) {
 
     // Convert date strings to Date objects
     var dateObjects = dates.map(function(dateString) {
-        return new Date(dateString);
+        return ;
     });
 
     // Use reduce to find the maximum date
-    var latestDate = dateObjects.reduce(function (maxDate, currentDate) {
-        return currentDate > maxDate ? currentDate : maxDate;
+    var latestDate = dates.reduce(function (maxDate, currentDate) {
+        maxDateObject = new Date(maxDate)
+        currentDateObject = new Date(currentDate)
+        return currentDateObject > maxDateObject ? currentDateObject : maxDateObject;
     });
 
     return latestDate;
@@ -135,7 +132,7 @@ function refresh_calendar(){
                 // found the latest date and show on the map
                 var latestdate = findLatestDate(dateArray)
                 console.log("Found latest date is " + latestdate)
-                $('#datepicker').datepicker('setDate', latestdate);
+                $('#datepicker').datepicker('setDate', new Date(latestdate));
                 add_swe_predicted_geotiff(latestdate)
             }
         });
@@ -162,7 +159,7 @@ function add_listener_to_buttons(){
     $('#download_swe_geotiff').on('click', function() {
         // Create a temporary anchor element
         var selectedDate = $('#datepicker').datepicker('getFormattedDate');
-        console.log("loading layer for "+ selectedDate)
+        console.log("downloading geotiff for "+ selectedDate)
         // Open a new window to initiate the download
         window.open("../swe_forecasting/output/swe_predicted_"+selectedDate+".tif", '_blank');
     });
