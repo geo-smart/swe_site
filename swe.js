@@ -108,7 +108,10 @@ function findLatestDate(dates) {
 
 function refresh_calendar(){
   // Fetch the CSV file
-  fetch('../swe_forecasting/date_list.csv')
+  fetch('../swe_forecasting/date_list.csv', {
+    method: 'GET',
+    cache: 'no-store', // 'no-store' disables caching
+  })
     .then(response => response.text())
     .then(data => {
         console.log(data)
