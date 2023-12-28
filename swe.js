@@ -76,7 +76,7 @@ function setup_datepicker(dateArray){
     $('#datepicker').datepicker({
         format: 'yyyy-mm-dd',
         todayHighlight: true,
-        timeZone: 'Pacific', 
+        timeZone: 'America/Los_Angeles',
         autoclose: true,
         beforeShowDay: function(date) {
             // Convert date to yyyy-mm-dd format
