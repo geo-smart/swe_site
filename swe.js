@@ -99,7 +99,7 @@ function findLatestDate(dates) {
     var latestDate = dates.reduce(function (maxDate, currentDate) {
         maxDateObject = new Date(maxDate)
         currentDateObject = new Date(currentDate)
-        return currentDateObject > maxDateObject ? currentDateObject : maxDateObject;
+        return currentDateObject > maxDateObject ? currentDate : maxDate;
     });
 
     return latestDate;
