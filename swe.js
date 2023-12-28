@@ -93,8 +93,7 @@ function setup_datepicker(dateArray){
 
 function refresh_calendar(){
   // Fetch the CSV file
-//   fetch('../swe_forecasting/date_list.csv')
-  fetch('./test_date.csv')
+  fetch('../swe_forecasting/date_list.csv')
     .then(response => response.text())
     .then(data => {
         console.log(data)
