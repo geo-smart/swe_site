@@ -69,7 +69,7 @@ function add_swe_predicted_geotiff(date){
     });
     wmslayer.addTo(map);
     layercontrol.addOverlay(wmslayer, "Predicted SWE "+date);
-    
+
 }
 
 function setup_datepicker(dateArray){
@@ -129,6 +129,7 @@ function refresh_calendar(){
 
                 // found the latest date and show on the map
                 var latestdate = findLatestDate(dateArray)
+                console.log("Found latest date is " + latestdate)
                 $('#datepicker').datepicker('setDate', new Date(latestdate));
                 add_swe_predicted_geotiff(latestdate)
             }
