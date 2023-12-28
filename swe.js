@@ -97,12 +97,17 @@ function setup_datepicker(dateArray){
 // Function to find the latest date
 function findLatestDate(dates) {
     if (dates.length === 0) {
-      return null; // Return null for an empty array
+        return null; // Return null for an empty array
     }
 
+    // Convert date strings to Date objects
+    var dateObjects = dates.map(function(dateString) {
+        return new Date(dateString);
+    });
+
     // Use reduce to find the maximum date
-    var latestDate = dates.reduce(function (maxDate, currentDate) {
-      return currentDateString > maxDateString ? currentDate : maxDate;
+    var latestDate = dateObjects.reduce(function (maxDate, currentDate) {
+        return currentDate > maxDate ? currentDate : maxDate;
     });
 
     return latestDate;
@@ -130,7 +135,7 @@ function refresh_calendar(){
                 // found the latest date and show on the map
                 var latestdate = findLatestDate(dateArray)
                 console.log("Found latest date is " + latestdate)
-                $('#datepicker').datepicker('setDate', new Date(latestdate));
+                $('#datepicker').datepicker('setDate', latestdate);
                 add_swe_predicted_geotiff(latestdate)
             }
         });
