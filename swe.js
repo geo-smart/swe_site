@@ -84,6 +84,7 @@ function setup_datepicker(dateArray){
                 ('0' + (date.getMonth() + 1)).slice(-2) + '-' + 
                 ('0' + date.getDate()).slice(-2);
 
+            console.log("received dateArray = " + dateArray)
             if(dateArray.includes(formattedDate)){
                 console.log("the datearray contains formattedDate = " + formattedDate)
             }
@@ -150,6 +151,5 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMap();
     add_swe_predicted_geotiff()
     refresh_calendar()
-    setup_datepicker([])
     add_listener_to_buttons()
 });
