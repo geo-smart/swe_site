@@ -69,8 +69,7 @@ function add_swe_predicted_geotiff(date){
     });
     wmslayer.addTo(map);
     layercontrol.addOverlay(wmslayer, "Predicted SWE "+date);
-
-
+    
 }
 
 function setup_datepicker(dateArray){
@@ -95,6 +94,20 @@ function setup_datepicker(dateArray){
     });
 }
 
+// Function to find the latest date
+function findLatestDate(dates) {
+    if (dates.length === 0) {
+      return null; // Return null for an empty array
+    }
+
+    // Use reduce to find the maximum date
+    var latestDate = dates.reduce(function (maxDate, currentDate) {
+      return currentDateString > maxDateString ? currentDate : maxDate;
+    });
+
+    return latestDate;
+}
+
 function refresh_calendar(){
   // Fetch the CSV file
   fetch('../swe_forecasting/date_list.csv')
@@ -113,6 +126,11 @@ function refresh_calendar(){
 
                 // Initialize Bootstrap Datepicker with the dateArray
                 setup_datepicker(dateArray)
+
+                // found the latest date and show on the map
+                var latestdate = findLatestDate(dateArray)
+                $('#datepicker').datepicker('setDate', new Date(latestdate));
+                add_swe_predicted_geotiff(latestdate)
             }
         });
 
@@ -149,7 +167,6 @@ function add_listener_to_buttons(){
 // Automatically load the map when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
     loadMap();
-    add_swe_predicted_geotiff()
     refresh_calendar()
     add_listener_to_buttons()
 });
