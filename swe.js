@@ -95,11 +95,6 @@ function findLatestDate(dates) {
         return null; // Return null for an empty array
     }
 
-    // Convert date strings to Date objects
-    var dateObjects = dates.map(function(dateString) {
-        return ;
-    });
-
     // Use reduce to find the maximum date
     var latestDate = dates.reduce(function (maxDate, currentDate) {
         maxDateObject = new Date(maxDate)
