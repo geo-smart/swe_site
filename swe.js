@@ -107,7 +107,7 @@ function refresh_calendar(){
                 console.log("dateArray = " + dateArray)
 
                 // Initialize Bootstrap Datepicker with the dateArray
-                
+                setup_datepicker(dateArray)
             }
         });
 
@@ -146,5 +146,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMap();
     add_swe_predicted_geotiff()
     refresh_calendar()
+    setup_datepicker([])
     add_listener_to_buttons()
 });
