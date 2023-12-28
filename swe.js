@@ -161,10 +161,86 @@ function add_listener_to_buttons(){
 
 }
 
+function getColor(d) {
+    // Specify the number of classes (baskets)
+    // var numClasses = 10;
+  
+    // // Generate grades dynamically based on the number of classes
+    // var grades = Array.from({ length: numClasses + 1 }, function (_, index) {
+    //   return (30 / numClasses) * index;
+    // });
+  
+    // // Define color scale from gray to blue to purple
+    // var colorScale = chroma.scale(['#f0f0f0', '#4d4dff', '#9900cc']).mode('lab').colors(numClasses);
+
+    // // 
+  
+    // // Find the appropriate color class based on the input value
+    // for (var i = 0; i < grades.length - 1; i++) {
+    //   if (d >= grades[i] && d < grades[i + 1]) {
+    //     return colorScale[i];
+    //   }
+    // }
+
+    // console.log(colorScale)
+
+    // Define color classes
+    var colors = ['#f0f0f0', '#d6caf5', '#b9a6f9', '#9782fc', '#6c5efe', 
+        '#5b48f9', '#713eee', '#8131e2', '#8e21d7', '#9900cc']
+
+    // Specify the number of classes (baskets)
+    var numClasses = 10;
+
+    // Generate grades dynamically based on the number of classes
+    var grades = Array.from({ length: numClasses + 1 }, function (_, index) {
+        return (30 / numClasses) * index;
+    });
+
+    // Find the appropriate color class based on the input value
+    for (var i = 0; i < grades.length - 1; i++) {
+        if (d >= grades[i] && d < grades[i + 1]) {
+            return colors[i];
+        }
+    }
+
+    // Handle the case where the input value is greater than the last grade
+    return colors[grades.length - 1];
+  }
+
+function add_legend(){
+    // Your MapServer configuration with 15 classes
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            labels = [];
+
+        // Specify the number of classes (baskets)
+        var numClasses = 10;
+        
+        // Generate grades dynamically based on the number of classes
+        var grades = Array.from({ length: numClasses + 1 }, function(_, index) {
+            return (30 / numClasses) * index;
+        });
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+        }
+
+        return div;
+    };
+
+    legend.addTo(map);
+}
 
 // Automatically load the map when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
     loadMap();
     refresh_calendar()
     add_listener_to_buttons()
+    add_legend()
 });
