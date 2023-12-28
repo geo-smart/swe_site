@@ -83,7 +83,10 @@ function setup_datepicker(dateArray){
             var formattedDate = date.getFullYear() + '-' + 
                 ('0' + (date.getMonth() + 1)).slice(-2) + '-' + 
                 ('0' + date.getDate()).slice(-2);
-            console.log("formattedDate = " + formattedDate)
+
+            if(dateArray.includes(formattedDate)){
+                console.log("the datearray contains formattedDate = " + formattedDate)
+            }
 
             // Check if the date is in the dateArray
             return dateArray.includes(formattedDate);
