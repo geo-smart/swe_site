@@ -83,6 +83,7 @@ function setup_datepicker(dateArray){
             var formattedDate = date.getFullYear() + '-' + 
                 ('0' + (date.getMonth() + 1)).slice(-2) + '-' + 
                 ('0' + date.getDate()).slice(-2);
+            console.log("formattedDate = " + formattedDate)
 
             // Check if the date is in the dateArray
             return dateArray.includes(formattedDate);
@@ -92,7 +93,8 @@ function setup_datepicker(dateArray){
 
 function refresh_calendar(){
   // Fetch the CSV file
-  fetch('../swe_forecasting/date_list.csv')
+//   fetch('../swe_forecasting/date_list.csv')
+  fetch('./test_date.csv')
     .then(response => response.text())
     .then(data => {
         console.log(data)
@@ -124,7 +126,7 @@ function add_listener_to_buttons(){
     $('#load_swe_to_map').on('click', function() {
         // Get the selected date from the datepicker
         var selectedDate = $('#datepicker').datepicker('getFormattedDate');
-        print("loading layer for "+ selectedDate)
+        console.log("loading layer for "+ selectedDate)
         // Show overlay with selected date
         add_swe_predicted_geotiff(selectedDate);
     });
