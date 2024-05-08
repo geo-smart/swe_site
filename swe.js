@@ -34,6 +34,16 @@ function loadMap() {
 
     basemaps.SatelliteImagery.addTo(map);
 
+    fetch('counties.geojson').then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        // Add the county boundaries layer to the map
+        var geojsonLayer = L.geoJSON(data);
+        geojsonLayer.addTo(map);
+        geojsonLayer.bringToFront();
+    });
+
     // Add layer control to the map
     layercontrol = L.control.layers(basemaps).addTo(map);
 
