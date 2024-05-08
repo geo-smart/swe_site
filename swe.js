@@ -34,18 +34,9 @@ function loadMap() {
 
     basemaps.SatelliteImagery.addTo(map);
 
-    fetch('counties.geojson').then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        // Add the county boundaries layer to the map
-        var geojsonLayer = L.geoJSON(data);
-        geojsonLayer.addTo(map);
-        geojsonLayer.bringToFront();
-    });
-
     // Add layer control to the map
     layercontrol = L.control.layers(basemaps).addTo(map);
+
 
     // Add zoom control to the top right corner
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -58,6 +49,25 @@ function loadMap() {
 
     // Fit the map to the bounding box
     map.fitBounds(usaBounds);
+    
+    fetch('counties.geojson').then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        // Add the county boundaries layer to the map
+        var geojsonStyle = {
+            color: '#000000', // Red color
+            weight: 1 // Line width
+        };
+
+        // Add the county boundaries layer to the map with custom style
+        var geojsonLayer = L.geoJSON(data, {
+            style: geojsonStyle
+        });
+        geojsonLayer.addTo(map);
+        geojsonLayer.bringToFront(); // Bring the GeoJSON layer to the top
+        layercontrol.addOverlay(wmslayer, "Predicted SWE "+date);
+    });
 }
 
 function add_swe_predicted_geotiff(date){
