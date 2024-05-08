@@ -50,7 +50,7 @@ function loadMap() {
     // Fit the map to the bounding box
     map.fitBounds(usaBounds);
     
-    fetch('counties.geojson').then(function(response) {
+    fetch('us-states.json').then(function(response) {
         return response.json();
     })
     .then(function(data) {
