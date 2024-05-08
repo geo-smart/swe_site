@@ -22,15 +22,7 @@ function loadMap() {
         }),
 
         Places: L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
-            layers: 'OSM-Overlay-WMS'
-        }),
-
-        'Topography, then places': L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
-            layers: 'TOPO-WMS,OSM-Overlay-WMS'
-        }),
-
-        'Places, then topography': L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
-            layers: 'OSM-Overlay-WMS,TOPO-WMS'
+            layers: 'OSM-WMS'
         }),
 
         'SatelliteImagery': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/'+
