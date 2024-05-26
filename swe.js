@@ -189,8 +189,11 @@ function getColor(d) {
     // console.log(colorScale)
 
     // Define color classes
-    var colors = ['#f0f0f0', '#d6caf5', '#b9a6f9', '#9782fc', '#6c5efe', 
-        '#5b48f9', '#713eee', '#8131e2', '#8e21d7', '#9900cc']
+    // var colors = ['#f0f0f0', '#d6caf5', '#b9a6f9', '#9782fc', '#6c5efe', 
+    //     '#5b48f9', '#713eee', '#8131e2', '#8e21d7', '#9900cc']
+    
+    var colors = ['#003366', '#336699', '#6699CC', '#99CCFF', '#99FFFF', 
+        '#CCFFFF', '#FFFFCC', '#FFFF99', '#FFFF66', '#FFFF33']
 
     // Specify the number of classes (baskets)
     var numClasses = 10;
