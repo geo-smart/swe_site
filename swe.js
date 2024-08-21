@@ -68,6 +68,43 @@ function loadMap() {
         geojsonLayer.bringToFront(); // Bring the GeoJSON layer to the top
         layercontrol.addOverlay(wmslayer, "Predicted SWE "+date);
     });
+
+    // Event listener for map clicks
+    map.on('click', function(e) {
+        var lat = e.latlng.lat.toFixed(6);
+        var lon = e.latlng.lng.toFixed(6);
+        var content = `<strong>Coordinates:</strong><br>Latitude: ${lat}<br>Longitude: ${lon}<br><button onclick="copyCoordinates('${lat}', '${lon}')">Copy Coordinates</button>`;
+
+        L.popup()
+            .setLatLng(e.latlng)
+            .setContent(content)
+            .openOn(map);
+    });
+
+    
+}
+
+// Function to copy coordinates to clipboard
+function copyCoordinates(lat, lon) {
+    const textToCopy = `${lat}, ${lon}`;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                alert('Coordinates copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+    } else {
+        // Fallback for older browsers
+        var tempInput = document.createElement('input');
+        tempInput.value = textToCopy;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        alert('Coordinates copied to clipboard!');
+    }
 }
 
 function add_swe_predicted_geotiff(date){
