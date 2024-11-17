@@ -11,7 +11,6 @@ var map, layercontrol;
 function loadMap() {
     // Get selected dates from datepicker
     var selectedDates = document.getElementById('datepicker').value.split(',');
-    
     // Get the Leaflet map container
     map = L.map('map').setView([0, 0], 2);
 
@@ -36,8 +35,6 @@ function loadMap() {
 
     // Add layer control to the map
     layercontrol = L.control.layers(basemaps).addTo(map);
-
-
     // Add zoom control to the top right corner
     L.control.zoom({ position: 'topright' }).addTo(map);
     
@@ -50,38 +47,47 @@ function loadMap() {
     // Fit the map to the bounding box
     map.fitBounds(usaBounds);
     
-    fetch('us-states.json').then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        // Add the county boundaries layer to the map
-        var geojsonStyle = {
-            color: '#000000', // Red color
-            weight: 1 // Line width
-        };
+    // Load GeoJSON data and add state boundaries with labels
+    fetch('us-states.json')
+        .then(response => response.json())
+        .then(data => {
+            var stateLayer = L.geoJSON(data, {
+                style: function (feature) {
+                    return {
+                        color: '#000000',
+                        weight: 1
+                    };
+                },
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties && feature.properties.name) {
+                        var stateName = feature.properties.name;
+                        var center = layer.getBounds().getCenter();
+                        L.marker(center, {
+                            icon: L.divIcon({
+                                className: 'state-label',
+                                html: `<strong>${stateName}</strong>`,
+                                iconSize: [100, 40]
+                            })
+                        }).addTo(map);
+                    }
+                }
+            }).addTo(map);
 
-        // Add the county boundaries layer to the map with custom style
-        var geojsonLayer = L.geoJSON(data, {
-            style: geojsonStyle
+            stateLayer.bringToFront();
+            layercontrol.addOverlay(stateLayer, "State Boundaries");
+        })
+        .catch(error => {
+            console.error('Error loading GeoJSON data:', error);
         });
-        geojsonLayer.addTo(map);
-        geojsonLayer.bringToFront(); // Bring the GeoJSON layer to the top
-        layercontrol.addOverlay(wmslayer, "Predicted SWE "+date);
-    });
-
-    // Event listener for map clicks
-    map.on('click', function(e) {
+ map.on('click', function (e) {
         var lat = e.latlng.lat.toFixed(6);
         var lon = e.latlng.lng.toFixed(6);
         var content = `<strong>Coordinates:</strong><br>Latitude: ${lat}<br>Longitude: ${lon}<br><button onclick="copyCoordinates('${lat}', '${lon}')">Copy Coordinates</button>`;
-
         L.popup()
             .setLatLng(e.latlng)
             .setContent(content)
             .openOn(map);
     });
-
-    
 }
 
 // Function to copy coordinates to clipboard
@@ -156,42 +162,38 @@ function findLatestDate(dates) {
 }
 
 function refresh_calendar(){
-  // Fetch the CSV file
-  fetch('../swe_forecasting/date_list.csv', {
-    method: 'GET',
-    cache: 'no-store', // 'no-store' disables caching
-  })
-    .then(response => response.text())
-    .then(data => {
-        console.log(data)
-        // Parse CSV data and convert the date column into an array
-        Papa.parse(data, {
-            header: true,
-            complete: function(results) {
-                // Assuming 'date' is the name of your date column
-                var dateArray = results.data.map(function(row) {
-                    return row.date;
-                });
-                console.log("dateArray = " + dateArray)
-
-                // Initialize Bootstrap Datepicker with the dateArray
-                setup_datepicker(dateArray)
-
-                // found the latest date and show on the map
-                var latestdate = findLatestDate(dateArray)
-                console.log("Found latest date is " + latestdate)
-                $('#datepicker').datepicker('setDate', new Date(latestdate));
-                add_swe_predicted_geotiff(latestdate)
-            }
-        });
-
+    // Fetch the CSV file
+    fetch('../swe_forecasting/date_list.csv', {
+      method: 'GET',
+      cache: 'no-store', // 'no-store' disables caching
     })
-    .catch(error => console.error('Error fetching CSV file:', error));
-
-        
-    
-}
-
+      .then(response => response.text())
+      .then(data => {
+          console.log(data)
+          // Parse CSV data and convert the date column into an array
+          Papa.parse(data, {
+              header: true,
+              complete: function(results) {
+                  // Assuming 'date' is the name of your date column
+                  var dateArray = results.data.map(function(row) {
+                      return row.date;
+                  });
+                  console.log("dateArray = " + dateArray)
+  
+                  // Initialize Bootstrap Datepicker with the dateArray
+                  setup_datepicker(dateArray)
+  
+                  // found the latest date and show on the map
+                  var latestdate = findLatestDate(dateArray)
+                  console.log("Found latest date is " + latestdate)
+                  $('#datepicker').datepicker('setDate', new Date(latestdate));
+                  add_swe_predicted_geotiff(latestdate)
+              }
+          });
+  
+      })
+      .catch(error => console.error('Error fetching CSV file:', error));
+  }
 function add_listener_to_buttons(){
 
     // Button click listener
@@ -213,7 +215,6 @@ function add_listener_to_buttons(){
     });
 
 }
-
 function getColor(d) {
     // Specify the number of classes (baskets)
     // var numClasses = 10;
@@ -258,7 +259,6 @@ function getColor(d) {
             return colors[i];
         }
     }
-
     // Handle the case where the input value is greater than the last grade
     return colors[grades.length - 1];
   }
@@ -294,7 +294,6 @@ function add_legend(){
 
     legend.addTo(map);
 }
-
 // Automatically load the map when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
     loadMap();
