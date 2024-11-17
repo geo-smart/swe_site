@@ -35,8 +35,6 @@ function loadMap() {
 
     // Add layer control to the map
     layercontrol = L.control.layers(basemaps).addTo(map);
-
-
     // Add zoom control to the top right corner
     L.control.zoom({ position: 'topright' }).addTo(map);
     
@@ -81,8 +79,7 @@ function loadMap() {
         .catch(error => {
             console.error('Error loading GeoJSON data:', error);
         });
-
-    map.on('click', function (e) {
+ map.on('click', function (e) {
         var lat = e.latlng.lat.toFixed(6);
         var lon = e.latlng.lng.toFixed(6);
         var content = `<strong>Coordinates:</strong><br>Latitude: ${lat}<br>Longitude: ${lon}<br><button onclick="copyCoordinates('${lat}', '${lon}')">Copy Coordinates</button>`;
@@ -196,9 +193,6 @@ function refresh_calendar(){
   
       })
       .catch(error => console.error('Error fetching CSV file:', error));
-  
-          
-      
   }
 function add_listener_to_buttons(){
 
@@ -221,7 +215,6 @@ function add_listener_to_buttons(){
     });
 
 }
-
 function getColor(d) {
     // Specify the number of classes (baskets)
     // var numClasses = 10;
@@ -266,7 +259,6 @@ function getColor(d) {
             return colors[i];
         }
     }
-
     // Handle the case where the input value is greater than the last grade
     return colors[grades.length - 1];
   }
@@ -302,7 +294,6 @@ function add_legend(){
 
     legend.addTo(map);
 }
-
 // Automatically load the map when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
     loadMap();
