@@ -50,24 +50,38 @@ function loadMap() {
     // Fit the map to the bounding box
     map.fitBounds(usaBounds);
     
-    fetch('us-states.json').then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        // Add the county boundaries layer to the map
-        var geojsonStyle = {
-            color: '#000000', // Red color
-            weight: 1 // Line width
-        };
+    fetch('us-states.json')
+        .then(response => response.json())
+        .then(data => {
+            var stateLayer = L.geoJSON(data, {
+                style: function (feature) {
+                    return {
+                        color: '#000000',
+                        weight: 1
+                    };
+                },
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties && feature.properties.name) {
+                        var stateName = feature.properties.name;
+                        var center = layer.getBounds().getCenter();
+                        L.marker(center, {
+                            icon: L.divIcon({
+                                className: 'state-label',
+                                html: `<strong>${stateName}</strong>`,
+                                iconSize: [100, 40]
+                            })
+                        }).addTo(map);
+                    }
+                }
+            }).addTo(map);
 
-        // Add the county boundaries layer to the map with custom style
-        var geojsonLayer = L.geoJSON(data, {
-            style: geojsonStyle
+            stateLayer.bringToFront();
+            layercontrol.addOverlay(stateLayer, "State Boundaries");
+            layercontrol.addOverlay(wmslayer, "Predicted SWE " + date);
+        })
+        .catch(error => {
+            console.error('Error loading GeoJSON data:', error);
         });
-        geojsonLayer.addTo(map);
-        geojsonLayer.bringToFront(); // Bring the GeoJSON layer to the top
-        layercontrol.addOverlay(wmslayer, "Predicted SWE "+date);
-    });
 
     // Event listener for map clicks
     map.on('click', function(e) {
