@@ -77,6 +77,7 @@ function loadMap() {
 
             stateLayer.bringToFront();
             layercontrol.addOverlay(stateLayer, "State Boundaries");
+            layercontrol.addOverlay(wmslayer, "Predicted SWE " + date);
         })
         .catch(error => {
             console.error('Error loading GeoJSON data:', error);
