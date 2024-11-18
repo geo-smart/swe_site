@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWE Forecast Map</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <h3>Snow Water Equivalent Estimation Map</h3>
+        <p class="subtitle">A Project by the SnowSource Team</p>
+    </header>
+
+    <!-- Control Panel -->
+    <div id="control-panel" class="control-panel-horizontal">
+        <div class="form-group">
+            <label for="datepicker">Select Date:</label>
+            <input type="text" id="datepicker" class="form-control" placeholder="YYYY-MM-DD">
+            <button id="load_swe_to_map" class="btn btn-primary">Load SWE Prediction</button>
+        <button id="download_swe_geotiff" class="btn btn-secondary">Download SWE Prediction (GeoTiff)</button>
+        </div>
+        <div class="map-views">
+            <button type="button" class="btn btn-outline-primary">single map</button>
+            <button type="button" class="btn btn-outline-primary">swipe map</button>
+            <button type="button" class="btn btn-outline-primary">dual map</button>
+
+        </div>
+        
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="./scripts/index.js" type="module"></script>
+</body>
+
+</html>
