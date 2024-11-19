@@ -1,20 +1,18 @@
-export function setupDatepicker(dateArray, onSelectDate) {
-    $("#datepicker").datepicker({
-      format: "yyyy-mm-dd",
+export function setup_datepicker(dateArray){
+  $('#datepicker').datepicker({
+      format: 'yyyy-mm-dd',
       todayHighlight: true,
+      timeZone: 'America/Los_Angeles',
       autoclose: true,
-      beforeShowDay: (date) => {
-        const formattedDate = `${date.getFullYear()}-${(
-          "0" +
-          (date.getMonth() + 1)
-        ).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
-        return dateArray.includes(formattedDate);
-      },
-    });
-  
-    // Trigger the callback when a date is selected
-    $("#datepicker").on("changeDate", function (e) {
-      onSelectDate(e.format("yyyy-mm-dd"));
-    });
-  }
+      beforeShowDay: function(date) {
+          // Convert date to yyyy-mm-dd format
+          var formattedDate = date.getFullYear() + '-' + 
+              ('0' + (date.getMonth() + 1)).slice(-2) + '-' + 
+              ('0' + date.getDate()).slice(-2);
+
+          // Check if the date is in the dateArray
+          return dateArray.includes(formattedDate);
+      }
+  });
+}
   

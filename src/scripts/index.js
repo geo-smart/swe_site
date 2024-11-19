@@ -1,9 +1,9 @@
 import { refreshCalendar} from "./utils.js";
 import { MapHandler } from "./map.js";
-import { setupDatepicker } from "./datepicker.js";
-import { add_swe_predicted_geotiff } from "./geotiff.js";
 import { addLegend } from "./legend.js";
 import { setupEventListeners } from "./events.js";
+import { setup_datepicker } from "./datepicker.js";
+import { add_swe_predicted_geotiff } from "./geotiff.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize the map
@@ -12,10 +12,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Load available dates into the datepicker
   refreshCalendar((dateArray) => {
-    setupDatepicker(dateArray, (selectedDate) => {
+    setup_datepicker(dateArray, (selectedDate) => {
       console.log(`Date selected: ${selectedDate}`);
       // Load SWE GeoTIFF prediction for the selected date
-      add_swe_predicted_geotiff(mapHandler.map, mapHandler.layerControl, selectedDate);
+      add_swe_predicted_geotiff(
+        mapHandler.map,
+        mapHandler.layerControl,
+        selectedDate
+      );
     });
   });
 

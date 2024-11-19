@@ -103,7 +103,7 @@ body {
     color: white;
     font-size: 14px; 
 }
-  
+
 /* Responsive Design for Smaller Screens */
 @media (max-width: 768px) {
     .control-panel-horizontal {
