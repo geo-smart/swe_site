@@ -13,7 +13,8 @@ function loadMap() {
     var selectedDates = document.getElementById('datepicker').value.split(',');
     
     // Get the Leaflet map container
-    map = L.map('map').setView([0, 0], 2);
+    // removed default zoom control
+    map = L.map("map", { zoomControl: false }).setView([0, 0], 2);
 
     var basemaps = {
         
@@ -42,9 +43,9 @@ function loadMap() {
     L.control.zoom({ position: 'topright' }).addTo(map);
     
     var usaBounds = [
-       // -125, 25, -100, 49
-       [25, -125.000000], // Southwest
-       [49, -100]   // Northeast
+       // -125, 30, -78, 51
+       [30, -125.000000], // Southwest
+       [51, -78]   // Northeast
     ];
 
     // Fit the map to the bounding box
