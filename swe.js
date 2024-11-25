@@ -53,6 +53,9 @@ function loadMap() {
     fetch('us-states.json')
         .then(response => response.json())
         .then(data => {
+        fetch('state-abbreviation.json')
+        .then(response => response.json())
+        .then(stateAbbreviations => {
             var stateLayer = L.geoJSON(data, {
                 style: function (feature) {
                     return {
@@ -63,14 +66,38 @@ function loadMap() {
                 onEachFeature: function (feature, layer) {
                     if (feature.properties && feature.properties.name) {
                         var stateName = feature.properties.name;
+                        var abbreviation = stateAbbreviations[stateName] || stateName;
                         var center = layer.getBounds().getCenter();
-                        L.marker(center, {
+                        var marker = L.marker(center, {
                             icon: L.divIcon({
                                 className: 'state-label',
                                 html: `<strong>${stateName}</strong>`,
                                 iconSize: [100, 40]
                             })
                         }).addTo(map);
+
+                        function updateLabelContent() {
+                            const zoomLevel = map.getZoom();
+                            const label = zoomLevel >= 4 ? stateName : abbreviation;
+                            const isZoomedOut = zoomLevel < 3;
+
+                            marker.setIcon(L.divIcon({
+                                className: 'state-label',
+                                html: `<strong>${label}</strong>`,
+                                iconSize: [100, 40]
+                            }));
+
+                            if (isZoomedOut) {
+                                marker.remove();
+                            } else {
+                                if (!map.hasLayer(marker)) {
+                                    marker.addTo(map);
+                                }
+                            }
+                        }
+                        map.on('zoomend', updateLabelContent);
+
+                        updateLabelContent();
                     }
                 }
             }).addTo(map);
@@ -78,6 +105,10 @@ function loadMap() {
             stateLayer.bringToFront();
             layercontrol.addOverlay(stateLayer, "State Boundaries");
             layercontrol.addOverlay(wmslayer, "Predicted SWE " + date);
+        })
+        .catch(error => {
+            console.error('Error loading abbreviations:', error);
+        });
         })
         .catch(error => {
             console.error('Error loading GeoJSON data:', error);
