@@ -182,6 +182,14 @@ function setup_datepicker(dateArray){
             // Check if the date is in the dateArray
             return dateArray.includes(formattedDate);
         }
+    }).on('show', function(e) {
+        // Ensure the datepicker is properly positioned
+        var datepicker = $('.datepicker');
+        var offset = $(this).offset();
+        datepicker.css({
+            top: offset.top + $(this).outerHeight(),
+            left: offset.left
+        });
     });
 }
 
@@ -233,8 +241,8 @@ function refresh_calendar(){
 
     })
     .catch(error => console.error('Error fetching CSV file:', error));
+    
 
-        
     
 }
 
