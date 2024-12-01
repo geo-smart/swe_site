@@ -57,6 +57,7 @@ function loadMap() {
         fetch('state-abbreviation.json')
         .then(response => response.json())
         .then(stateAbbreviations => {
+            var stateNameMarkers = L.layerGroup();
             var stateLayer = L.geoJSON(data, {
                 style: function (feature) {
                     return {
@@ -75,7 +76,7 @@ function loadMap() {
                                 html: `<strong>${stateName}</strong>`,
                                 iconSize: [100, 40]
                             })
-                        }).addTo(map);
+                        }).addTo(stateNameMarkers);
 
                         function updateLabelContent() {
                             const zoomLevel = map.getZoom();
@@ -92,7 +93,7 @@ function loadMap() {
                                 marker.remove();
                             } else {
                                 if (!map.hasLayer(marker)) {
-                                    marker.addTo(map);
+                                    marker.addTo(stateNameMarkers);
                                 }
                             }
                         }
@@ -104,7 +105,9 @@ function loadMap() {
             }).addTo(map);
 
             stateLayer.bringToFront();
+            stateNameMarkers.addTo(map);
             layercontrol.addOverlay(stateLayer, "State Boundaries");
+            layercontrol.addOverlay(stateNameMarkers, "State Names");
             layercontrol.addOverlay(wmslayer, "Predicted SWE " + date);
         })
         .catch(error => {
