@@ -39,13 +39,21 @@ function loadMap() {
   // Add layer control to the map
   layercontrol = L.control.layers(basemaps).addTo(map);
 
-  
+  // Customize the behavior to toggle layers on click (not hover)
+  const layerControlDiv = document.querySelector(".leaflet-control-layers");
+  layerControlDiv.addEventListener("click", function (event) {
+    // We check if the click was on the checkbox (layer control)
+    if (event.target && event.target.tagName === "INPUT") {
+      event.target.click(); // Toggle the layer
+    }
+  });
+
   // Add zoom control to the top right corner
   L.control.zoom({ position: "topright" }).addTo(map);
 
   var usaBounds = [
-    [26, -114.0], // Southwest
-    [49, -78], // Northeast
+    [22, -115.0], // Southwest
+    [51, -78], // Northeast
   ];
 
   // Fit the map to the bounding box
