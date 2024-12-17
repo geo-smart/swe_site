@@ -16,158 +16,166 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
     />
-
     <!-- Your CSS styles -->
     <style>
       body {
         margin: 0;
         overflow: hidden;
+        display: flex;
+        flex-direction: row;
       }
 
+      /* Map Container */
       #map {
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
+        width: 100%; /* This ensures the map takes up full width */
         height: 100vh;
+        z-index: 1;
       }
 
-      #content {
-        position: absolute;
-        top: 20px; /* Adjust the top position as needed */
-        left: 20px; /* Adjust the left position as needed */
-        z-index: 1000; /* Ensure it's above the map */
-      }
-
-      h1,
-      label,
-      input,
-      button {
-        margin-bottom: 10px;
-      }
-
-      /* Header Section */
+      /* Header Styling */
       .header {
         background: linear-gradient(90deg, #4caf50, #2196f3);
         color: white;
-        text-align: center;
-        padding: 5px 10px;
+        padding: 8px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        position: relative;
-        /* z-index: 1000; */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
         display: flex;
         justify-content: space-between;
       }
 
-      .header h1 {
+      .header h3 {
         margin: 0;
-        font-size: 2rem;
-        font-weight: bold;
+        font-size: 1.1rem;
+        font-weight: medium;
+        text-transform: uppercase;
       }
 
-      .header .subtitle {
-        margin: 5px 0 0;
-        font-size: 1.2rem;
-        opacity: 0.8;
-      }
-      /* Control Panel Section */
-      .control-panel-horizontal {
+      /* Left-side Control Panel */
+      #content {
+        position: absolute;
+        right: 4%;
+        top:5%;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        overflow-y: auto;
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        /* background: rgba(255, 255, 255, 0.9); */
-        padding: 10px 20px;
+        flex-direction: row;
+      }
+      
+
+      /* Control Panel Styling */
+      .control-panel-horizontal {
+        /* padding: 10px; */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        position: relative;
-        /* z-index: 999; */
-        /* padding: -14rem; */
+        background: #f7f7f7;
+        border-radius: 5px;
+        padding: 10px;
+        /* width: 100%; */
       }
 
       .control-panel-horizontal .form-group {
         display: flex;
-        align-items: center;
-        margin: 0;
+        flex-direction: row;
+        gap: 10px;
+        margin-bottom: 0%;
       }
+
 
       .control-panel-horizontal .form-group label {
-        margin-right: 10px;
-        font-weight: bold;
-        font-size: 1rem;
+        font-weight: bold;        
+      }
+    
+      .form-group button{
+        font-size: 12px;
       }
 
-      .control-panel-horizontal .form-control {
-        width: 200px;
-        margin-right: 20px;
-      }
-
-      .control-panel-horizontal button {
-        flex-shrink: 0;
-        margin-left: 10px;
-      }
-
-      .legend {
-        line-height: 18px;
-        color: #555;
-      }
-      .legend i {
-        width: 18px;
-        height: 18px;
-        float: left;
-        margin-right: 8px;
-        opacity: 0.7;
-      }
-      .state-label {
-        color: white;
-        font-size: 14px;
-        left: 2.5rem;
-      }
-      /* Map Container */
-      #map {
-        position: absolute;
-        top: 120px; /* Adjust to match the header + control panel height */
-        left: 0;
-        width: 100%;
-        height: calc(100vh - 120px);
-      }
       .datepicker {
-          z-index: 1050 !important; 
+        z-index: 1050 !important;
       }
+
       .datepicker-dropdown {
-          position: absolute !important; 
+        position: absolute !important;
       }
+
+      /* Customizing the Layer Control position */
+      .leaflet-control-layers {
+        top: 140px !important; /* Move the control down a little */
+        right: 2px; /* Make sure it stays on the right side */
+        z-index: 1000; /* Ensure it's above the map but below the header */
+         
+      }
+      
+      
+
+      /* State label styling */
+      .state-label {
+        color: white; /* Set the text color to white */
+        font-size: 11px; /* Adjust the font size as desired */
+        font-weight: 500; /* Set a medium weight font */
+        text-align: center; /* Ensure text is centered */
+        padding: 5px; /* Add padding to make the text more readable */
+        text-transform: uppercase; /* Capitalize the first letter of each word */
+        white-space: nowrap; /* Prevent text from breaking across lines */
+        line-height: 1.2; /* Adjust line height for better readability */
+      }
+
+      /* Additional styling for splitting multi-word names */
+      .state-label span {
+        display: block; /* Force each word in the name to be on a new line */
+        margin-bottom: 2px; /* Add space between the lines */
+      }
+
+
+      .info.legend {
+  background-color: white;
+  /* padding: 10px; */
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 12px;
+}
+
+.info.legend i {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
     </style>
   </head>
   <body>
-    <!-- <div id="content">
-        <h1>Snow Water Equivalent Estimation Map - SnowSource Team</h1>
-        <label for="datepicker">Select Dates:</label>
-        <input type="text" id="datepicker">
-        <button id="load_swe_to_map" >Load SWE Prediciton to Map</button>
-        <button id="download_swe_geotiff" >Download SWE Prediciton (GeoTiff)</button>
-    </div> -->
-
     <!-- Header Section -->
     <header class="header">
       <h3>Snow Water Equivalent Estimation Map</h3>
-      <p class="subtitle">A Project by the SnowSource Team</p>
+      <h3 style="text-transform: capitalize;">SnowSource</h3>
     </header>
 
-    <!-- Control Panel -->
-    <div id="control-panel" class="control-panel-horizontal">
-      <div class="form-group">
-        <label for="datepicker">Select Date:</label>
-        <input type="text" id="datepicker" />
-        <button id="load_swe_to_map" class="btn btn-primary">
-          Load SWE Prediction
-        </button>
-        <button id="download_swe_geotiff" class="btn btn-secondary">
-          Download SWE Prediction (GeoTiff)
-        </button>
+    <!-- Left-side Control Panel -->
+    <div id="content">
+      <div id="control-panel" class="control-panel-horizontal">
+        <div class="form-group">
+          <label for="datepicker">Select Date:</label>
+          <input type="text" id="datepicker" />
+            <button id="load_swe_to_map" class="btn btn-primary">
+              Load SWE Prediction
+            </button>
+            <button id="download_swe_geotiff" class="btn btn-secondary">
+              Download SWE Prediction (GeoTiff)
+            </button>
+        </div>
       </div>
     </div>
 
+   
+
+    <!-- Map Container -->
     <div id="map"></div>
-    <!--<div id="map-controls"></div>-->
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <!-- Include Bootstrap and Bootstrap Datepicker JS -->
