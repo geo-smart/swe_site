@@ -288,7 +288,8 @@ function add_listener_to_buttons() {
 }
 
 function getColor(d) {
-  var colors = [
+  // Define color scale based on the value
+  const colors = [
     "#003366",
     "#336699",
     "#6699CC",
@@ -301,21 +302,25 @@ function getColor(d) {
     "#FFFF33",
   ];
 
-  var numClasses = 10;
+  const numClasses = 10;
 
-  var grades = Array.from({ length: numClasses + 1 }, function (_, index) {
-    return (30 / numClasses) * index;
-  });
+  // Generate grades based on the number of classes and the range of values
+  const grades = Array.from(
+    { length: numClasses + 1 },
+    (_, index) => (30 / numClasses) * index
+  );
 
-  for (var i = 0; i < grades.length - 1; i++) {
+  // Assign the correct color based on the value of 'd'
+  for (let i = 0; i < grades.length - 1; i++) {
     if (d >= grades[i] && d < grades[i + 1]) {
-      return colors[i];
+      return colors[i]; // Return the appropriate color
     }
   }
 
-  return colors[grades.length - 1];
+  return colors[grades.length - 1]; // Default to the last color if no match
 }
 
+// Function to add a color legend to the map
 function add_legend() {
   var legend = L.control({ position: "bottomright" });
 
@@ -326,13 +331,14 @@ function add_legend() {
     div.style.backgroundColor = "white";
     div.style.padding = "10px";
 
-    var numClasses = 10;
+    // Define the range of values for the legend (these should correspond to the value range you're using)
+    const grades = Array.from(
+      { length: 10 + 1 },
+      (_, index) => (30 / 10) * index
+    ); // Create 10 equally spaced grades
 
-    var grades = Array.from({ length: numClasses + 1 }, function (_, index) {
-      return (30 / numClasses) * index;
-    });
-
-    for (var i = 0; i < grades.length; i++) {
+    // Generate the legend items
+    for (let i = 0; i < grades.length - 1; i++) {
       div.innerHTML +=
         '<i style="background:' +
         getColor(grades[i] + 1) +
@@ -344,7 +350,7 @@ function add_legend() {
     return div;
   };
 
-  legend.addTo(map);
+  legend.addTo(map); // Add the legend to the map
 }
 
 // Automatically load the map when the document is ready
