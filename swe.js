@@ -13,7 +13,8 @@ function loadMap() {
     var selectedDates = document.getElementById('datepicker').value.split(',');
     
     // Get the Leaflet map container
-    map = L.map('map').setView([0, 0], 2);
+    // removed default zoom control
+    map = L.map("map", { zoomControl: false }).setView([0, 0], 2);
 
     var basemaps = {
         
@@ -42,32 +43,80 @@ function loadMap() {
     L.control.zoom({ position: 'topright' }).addTo(map);
     
     var usaBounds = [
-       // -125, 25, -100, 49
-       [25, -125.000000], // Southwest
-       [49, -100]   // Northeast
+       // -125, 30, -78, 51
+       [30, -125.000000], // Southwest
+       [51, -78]   // Northeast
     ];
 
     // Fit the map to the bounding box
     map.fitBounds(usaBounds);
     
-    fetch('us-states.json').then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        // Add the county boundaries layer to the map
-        var geojsonStyle = {
-            color: '#000000', // Red color
-            weight: 1 // Line width
-        };
+    fetch('us-states.json')
+        .then(response => response.json())
+        .then(data => {
+        fetch('state-abbreviation.json')
+        .then(response => response.json())
+        .then(stateAbbreviations => {
+            var stateNameMarkers = L.layerGroup();
+            var stateLayer = L.geoJSON(data, {
+                style: function (feature) {
+                    return {
+                        color: '#000000',
+                        weight: 1
+                    };
+                },
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties && feature.properties.name) {
+                        var stateName = feature.properties.name;
+                        var abbreviation = stateAbbreviations[stateName] || stateName;
+                        var center = layer.getBounds().getCenter();
+                        var marker = L.marker(center, {
+                            icon: L.divIcon({
+                                className: 'state-label',
+                                html: `<strong>${stateName}</strong>`,
+                                iconSize: [100, 40]
+                            })
+                        }).addTo(stateNameMarkers);
 
-        // Add the county boundaries layer to the map with custom style
-        var geojsonLayer = L.geoJSON(data, {
-            style: geojsonStyle
+                        function updateLabelContent() {
+                            const zoomLevel = map.getZoom();
+                            const label = zoomLevel >= 4 ? stateName : abbreviation;
+                            const isZoomedOut = zoomLevel < 3;
+
+                            marker.setIcon(L.divIcon({
+                                className: 'state-label',
+                                html: `<strong>${label}</strong>`,
+                                iconSize: [100, 40]
+                            }));
+
+                            if (isZoomedOut) {
+                                marker.remove();
+                            } else {
+                                if (!map.hasLayer(marker)) {
+                                    marker.addTo(stateNameMarkers);
+                                }
+                            }
+                        }
+                        map.on('zoomend', updateLabelContent);
+
+                        updateLabelContent();
+                    }
+                }
+            }).addTo(map);
+
+            stateLayer.bringToFront();
+            stateNameMarkers.addTo(map);
+            layercontrol.addOverlay(stateLayer, "State Boundaries");
+            layercontrol.addOverlay(stateNameMarkers, "State Names");
+            layercontrol.addOverlay(wmslayer, "Predicted SWE " + date);
+        })
+        .catch(error => {
+            console.error('Error loading abbreviations:', error);
         });
-        geojsonLayer.addTo(map);
-        geojsonLayer.bringToFront(); // Bring the GeoJSON layer to the top
-        layercontrol.addOverlay(wmslayer, "Predicted SWE "+date);
-    });
+        })
+        .catch(error => {
+            console.error('Error loading GeoJSON data:', error);
+        });
 
     // Event listener for map clicks
     map.on('click', function(e) {
@@ -136,6 +185,14 @@ function setup_datepicker(dateArray){
             // Check if the date is in the dateArray
             return dateArray.includes(formattedDate);
         }
+    }).on('show', function(e) {
+        // Ensure the datepicker is properly positioned
+        var datepicker = $('.datepicker');
+        var offset = $(this).offset();
+        datepicker.css({
+            top: offset.top + $(this).outerHeight(),
+            left: offset.left
+        });
     });
 }
 
@@ -187,8 +244,8 @@ function refresh_calendar(){
 
     })
     .catch(error => console.error('Error fetching CSV file:', error));
+    
 
-        
     
 }
 
