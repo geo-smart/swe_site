@@ -241,16 +241,18 @@ function getColor(d) {
     // var colors = ['#f0f0f0', '#d6caf5', '#b9a6f9', '#9782fc', '#6c5efe', 
     //     '#5b48f9', '#713eee', '#8131e2', '#8e21d7', '#9900cc']
     
-    var colors = ['#003366', '#336699', '#6699CC', '#99CCFF', '#99FFFF', 
-        '#CCFFFF', '#FFFFCC', '#FFFF99', '#FFFF66', '#FFFF33']
+    // var colors = ['#003366', '#336699', '#6699CC', '#99CCFF', '#99FFFF', 
+        // '#CCFFFF', '#FFFFCC', '#FFFF99', '#FFFF66', '#FFFF33']
+    
+    
 
     // Specify the number of classes (baskets)
-    var numClasses = 10;
+    var numClasses = 9;
 
     // Generate grades dynamically based on the number of classes
-    var grades = Array.from({ length: numClasses + 1 }, function (_, index) {
-        return (30 / numClasses) * index;
-    });
+    // var grades = Array.from({ length: numClasses + 1 }, function (_, index) {
+    //     return (30 / numClasses) * index;
+    // });
 
     // Find the appropriate color class based on the input value
     for (var i = 0; i < grades.length - 1; i++) {
@@ -275,17 +277,23 @@ function add_legend(){
         div.style.backgroundColor = 'white';
         div.style.padding = '10px';
         // Specify the number of classes (baskets)
-        var numClasses = 10;
+        var numClasses = 9;
         
         // Generate grades dynamically based on the number of classes
-        var grades = Array.from({ length: numClasses + 1 }, function(_, index) {
-            return (30 / numClasses) * index;
-        });
+        // var grades = Array.from({ length: numClasses + 1 }, function(_, index) {
+        //     return (30 / numClasses) * index;
+        // });
+        var grades = [0, 1, 4.5, 6, 7.5, 9, 10.5, 12, 13.5, 30]
+        var colors = [
+            "#FFFFFF", "#336699", "#6699CC", 
+            "#99CCFF", "#99FFFF", "#CCFFFF",
+            "#FFFFCC", "#FFFF99", "#FFFF66", "#FFF666"
+        ]
 
         // loop through our density intervals and generate a label with a colored square for each interval
         for (var i = 0; i < grades.length; i++) {
             div.innerHTML +=
-                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                '<i style="background:' + colors[i] + '"></i> ' +
                 grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
         }
 
